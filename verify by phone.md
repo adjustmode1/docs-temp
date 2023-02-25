@@ -1,3 +1,4 @@
+# xác thực
 ### Path: 
 ```
 POST /v2/iam/verify
@@ -10,7 +11,7 @@ POST /v2/iam/verify
 |Field|Data type| require|Description|
 |----|----|----|----|
 |phone|String|số điện thoại|True|
-|code|String|mã otp được gửi về ở [bước 1]([#b1-đăng-nhập](https://github.com/adjustmode1/docs-temp/blob/main/authorize%20by%20phone.md))|True|
+|code|String|mã otp được gửi về thông qua điện thoại|True|
 
 ### 1. Success:
 ```javascript

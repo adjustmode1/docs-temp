@@ -1,4 +1,4 @@
-# xác thực
+# xác thực bằng email
 
 ### Path:
 
@@ -14,52 +14,56 @@ POST /v2/iam/verify
 
 ### Body Request:
 
-| Field | Data type | require | Description                             |
-| ----- | --------- | ------- | --------------------------------------- |
-| phone | String    | True    | số điện thoại                           |
-| code  | String    | True    | mã otp được gửi về thông qua điện thoại |
+| Field | Data type | require                                 | Description |
+| ----- | --------- | --------------------------------------- | ----------- |
+| email | String    | email dùng để xác thực                  | True        |
+| code  | String    | mã otp được gửi về thông qua điện thoại | True        |
 
 ### Flow:
 
 1. kiểm tra body request:
 
-   - phone:
+   - email:
 
-     ```javascript
-     if not (bắt đầu bằng ['+84'|'+840'|'0'|'84'|'840'] theo sau là 9 ký tự số) {
+     ```js
+     if not (tồn tại '@' và '.' && sau '.' là 2 tới 4 ký tự) {
+
        lỗi(
-          message: 'Only VietNam phone numbers are supported.'
+         {
+          message: 'Invalid email format. Please try again!'
+         }
        )
-     }
 
-     if not (chuỗi số) {
-        lỗi(
-          message: 'phone must be a number string'
-        )
      }
      ```
 
    - code:
 
      ```js
-      if not (chuỗi số) {
-        lỗi (
-          message: 'code must be a number string'
-        )
-      }
+     if not (chuỗi số) {
 
-      if code.length < 6 {
-        lỗi(
-          message: 'code must be longer than or equal to 6 characters'
-        )
-      }
+       lỗi (
+         message: 'code must be a number string'
+       )
+
+     }
+
+     if code.length < 6 {
+
+       lỗi(
+         message: 'code must be longer than or equal to 6 characters'
+       )
+
+     }
      ```
 
 2. Main flow:
 
    1. kiểm tra device-id:
+
       ```javascript
         if không tồn tại device-id {
+
           trả về lỗi (
               {
                 ok: false,
@@ -67,8 +71,10 @@ POST /v2/iam/verify
                 code: 'deviceId404',
               }
           )
+
         }
       ```
+
    2. kiểm tra tài khoản:
 
       ```js
@@ -110,10 +116,11 @@ POST /v2/iam/verify
       ```
 
 ### Example:
-  ```sh
-  curl -X 'POST' 'https://api-sb.halome.dev/v2/iam/verify' \
-    -H 'accept: */*' \
-    -H 'Content-Type: application/json' \
-    -H 'device-id: 111 ' \
-    -d '{phone: 84977585797, code:"000000"}'
-  ```
+
+```sh
+curl -X 'POST' 'https://api-sb.halome.dev/v2/iam/verify-email' \
+-H 'accept: */*' \
+-H 'Content-Type: application/json' \
+-H 'device-id: 111 ' \
+-d '{email: "example@gmail.com", code:"000000"}'
+```

@@ -1,3 +1,4 @@
+# kích hoạt phiên hoạt động của thiết bị
 ### Path: 
   ```
   POST /v2/iam/authorize
